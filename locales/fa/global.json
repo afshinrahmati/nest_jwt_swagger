@@ -3,7 +3,11 @@
       "conflict": {
         "USER_EXIST" : "شما از قبل ثبت نام نموده اید",
         "BAD_REQUEST": "لطفا با دقت کامل پر نمایید"
-      }
+      },
+    "message": {
+      "NOT_USER_EXIST" : "هیچ کاربری یافت نشد"
+
+    }
   },
   "success": {
     "api": {
