@@ -19,3 +19,4 @@
 ### BUILD WITH_OUT DOCKER
 1) yarn
 2) yarn start:dev
+3) localhost:3003/api
