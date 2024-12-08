@@ -8,9 +8,12 @@ import { UserModelDefinition } from '../../../models/user/user.model';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { CompanyModelDefinition } from '../../../models/company/company.model';
 
 @Module({
-  imports: [MongooseModule.forFeature([UserModelDefinition])],
+  imports: [
+    MongooseModule.forFeature([UserModelDefinition, CompanyModelDefinition]),
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,

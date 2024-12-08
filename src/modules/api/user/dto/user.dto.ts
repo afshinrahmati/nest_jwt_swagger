@@ -39,4 +39,10 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   readonly nationalCode: string;
+  @ApiProperty({
+    description: 'companyId OF User',
+    example: 'companyId',
+  })
+  @IsOptional()
+  readonly companyId: string;
 }

@@ -14,11 +14,14 @@ import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
 import { CustomConfigService } from '../../config/config.service';
 import { JwtService } from '@nestjs/jwt';
+import { CompanyModel } from '../../../models/company/company.model';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(UserModel.name) private readonly userModel: Model<UserModel>,
+    @InjectModel(CompanyModel.name)
+    private readonly companyModel: Model<CompanyModel>,
     @InjectRedis() private readonly redis: Redis,
     private readonly bcryptService: BcryptService,
     private readonly i18n: I18nService,
@@ -36,11 +39,17 @@ export class AuthService {
       lastname,
       firstname,
       nationalCode,
+      role,
+      companyId,
     } = body;
-    const user = await this.userModel.findOne({ email: email });
+    const user = await this.userModel.findOne({ email: email, role: role });
     if (user) {
       throw new ConflictException(`User [${email}] already exist`);
     }
+    const compmany = await this.companyModel.findOne({ _id: companyId });
+    // if (!compmany) {
+    //   throw new BadRequestException('COMPANY_NOT_FOUND');
+    // }
     try {
       const password = await this.bcryptService.hashPassword(pass);
       await this.userModel.create({
@@ -50,6 +59,7 @@ export class AuthService {
         nationalCode,
         lastName: lastname,
         firstName: firstname,
+        companyId: compmany,
       });
       return this.i18n.t('global.success.user.CREATE');
     } catch (error) {

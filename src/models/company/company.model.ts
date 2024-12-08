@@ -1,8 +1,6 @@
 import { ModelDefinition, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, SchemaTimestampsConfig, Types } from 'mongoose';
-import { UserModel } from '../user/user.model';
+import { HydratedDocument, SchemaTimestampsConfig } from 'mongoose';
 import { StatusEnum } from '../../types/global';
-import paginate from 'mongoose-paginate-v2';
 
 @Schema({ collection: 'companies', timestamps: true })
 export class CompanyModel {
@@ -13,8 +11,6 @@ export class CompanyModel {
   @Prop({ type: String, required: true })
   location!: string;
 
-  @Prop({ type: Types.ObjectId, required: true, ref: 'UserModel' })
-  createdBy!: Types.ObjectId | UserModel;
   @Prop({
     type: String,
     enum: StatusEnum,
@@ -28,7 +24,6 @@ export type CompanyDocument = HydratedDocument<
   CompanyModel,
   SchemaTimestampsConfig
 >;
-CompanySchema.plugin(paginate);
 export const CompanyModelDefinition: ModelDefinition = {
   name: CompanyModel.name,
   schema: CompanySchema,

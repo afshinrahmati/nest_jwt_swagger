@@ -1,0 +1,82 @@
+version: "1.1"
+
+services:
+  fobix_redis:
+    image: redis
+    ports:
+      - "6379:6379"
+#    command: [ "redis-server", "--requirepass", "j1qazQAZEMsollFVjj" ]
+    volumes:
+      - redis_data:/data
+    networks:
+      - my_custom_network
+    environment:
+      - REDIS_HOST=fobix_redis
+      - REDIS_PORT=6379
+      - REDIS_DB=1
+      - THROTTLER_REDIS_DB=0
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  fobix_mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - my_custom_network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=ooo1qazQAZAFzz
+      - MONGO_INITDB_DATABASE=fobix
+    healthcheck:
+      test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  back-app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    depends_on:
+      - fobix_mongo
+      - fobix_redis
+    networks:
+      - my_custom_network
+    environment:
+      - MONGODB_URI=mongodb://root:ooo1qazQAZAFzz@fobix_mongo:27017/fobix
+      - REDIS_HOST=fobix_redis
+      - REDIS_PORT=6379
+      - REDIS_DB=1
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3003" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"  # Expose port 80 for HTTP
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - back-app
+    networks:
+      - my_custom_network
+
+volumes:
+  redis_data:
+  mongo_data:
+
+networks:
+  my_custom_network:
+    driver: bridge

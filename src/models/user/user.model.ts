@@ -1,6 +1,7 @@
 import { ModelDefinition, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 import { RoleEnum, StatusEnum } from '../../types/global';
+import { CompanyModel } from '../company/company.model';
 
 @Schema({ collection: 'users', timestamps: true })
 export class UserModel {
@@ -21,7 +22,8 @@ export class UserModel {
   email!: string;
   @Prop({ type: String, enum: StatusEnum, default: StatusEnum.ACTIVE })
   status!: string;
-
+  @Prop({ type: Types.ObjectId, ref: 'CompanyModel' })
+  companyId!: Types.ObjectId | CompanyModel | null;
   @Prop({
     type: String,
     enum: RoleEnum,

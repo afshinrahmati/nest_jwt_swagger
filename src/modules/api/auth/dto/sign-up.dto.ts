@@ -2,11 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
 } from 'class-validator';
 import { Match } from '../../../../components/decorator/match.decorator';
+import { RoleEnum } from '../../../../types/global';
 
 export class SignUpDto {
   @ApiProperty({
@@ -66,4 +68,19 @@ export class SignUpDto {
   @IsNotEmpty()
   @IsString()
   readonly nationalCode: string;
+
+  @ApiProperty({
+    description: 'Role OF User , Choice just one Enum value',
+    example: RoleEnum,
+  })
+  @IsNotEmpty()
+  @IsString()
+  readonly role: RoleEnum;
+  @ApiProperty({
+    description: 'CompanyId of User',
+    example: 'MONGO_ID OR null',
+  })
+  @IsString()
+  @IsOptional()
+  readonly companyId: string;
 }

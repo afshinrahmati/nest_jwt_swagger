@@ -10,6 +10,7 @@ import {
 export const Environment = {
   dev: 'dev',
   stage: 'stage',
+  prod: 'prod',
 } as const;
 
 export class EnvironmentVariable {
