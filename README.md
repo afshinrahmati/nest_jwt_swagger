@@ -13,4 +13,9 @@
        roles: [{ role: "readWrite", db: "fobix" }],
        });
    ```
-4) loca
+4) http://localhost/v1/api
+
+
+### BUILD WITH_OUT DOCKER
+1) yarn
+2) yarn start:dev
